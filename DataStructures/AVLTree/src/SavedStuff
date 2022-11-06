@@ -1,0 +1,43 @@
+
+	private boolean put(E data, Node<E> node) {
+		if(node.data == null) {
+			return startBlankTree(data);
+		}
+		if((node.right != null) && (data.compareTo(node.data) > 0)) {
+			return putRightSide(data,root);
+		}
+		if((node.left != null) && (data.compareTo(node.data) < 0)) {
+			return putLeftSide(data, node);
+		}
+		if(data.compareTo(node.data) > 0) {
+			return instantialSetRight(data, node);
+		}
+		if((data.compareTo(node.data) < 0)) {
+			return instantialSetLeft(data, node);
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	enum Option{NO_DATA, LEFT_PUT, RIGHT_PUT, RIGHT_SET, LEFT_SET};
+	private Option optionNumber(E data, Node<E> node) {
+			if(node.data == null) {
+				return Option.NO_DATA;
+			}
+			if((node.right != null) && (data.compareTo(node.data) > 0)) {
+				return Option.RIGHT_PUT;
+			}
+			if((node.left != null) && (data.compareTo(node.data) < 0)) {
+				return Option.LEFT_PUT;
+			}
+			if(data.compareTo(node.data) > 0) {
+				return Option.RIGHT_SET;
+			}
+			if((data.compareTo(node.data) < 0)) {
+				return Option.LEFT_SET;
+			}
+			return null;
+		}
