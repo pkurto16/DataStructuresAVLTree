@@ -603,6 +603,28 @@ class AVLTest {
 	//this test statistically (with large stressTestNum) covers every case possible that involves filled subtrees without
 	//rotating about the root (this is also true with rotations about the root, but not with unfilled subtrees
 	//hence the casework)
+	
+		
+	@Test
+	void twoDTestInt() {
+			AVLTree<Integer> testTree = new AVLTree<Integer>();
+			testTree.put(8);
+			testTree.put(4);
+			testTree.put(12);
+			testTree.put(2);
+			testTree.put(6);
+			testTree.put(10);
+			testTree.put(14);
+			testTree.put(1);
+			testTree.put(3);
+			testTree.put(5);
+			testTree.put(7);
+			testTree.put(9);
+			testTree.put(11);
+			testTree.put(13);
+			testTree.put(15);
+			System.out.println(testTree.multiD());
+	}
 	@Test
 	void stressTestInt() {
 		AVLTree<Integer> testTree = new AVLTree<Integer>();

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -142,6 +143,9 @@ public class AVLTree<E extends Comparable<E>> {
 		if(deletion!=null) {
 			deletion.data = findReplacement(deletion);
 			size--;
+			if(deletion.data==null) {
+				deletion=null;
+			}
 			return true;
 		}
 		return false;
@@ -162,12 +166,17 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private E findReplacement(Node<E> node) {
 		if (getBalance(node) == 1) {
-			return deletingFromRight(node.right);
+			return replaceWithRight(node.right);
 		}
-		if(node.left==null&&node.parent!=null) {
+		//if at a leaf, this will be true
+		if(node.left==null) {
+			if(node.parent==null) {
+				return null;
+			}
 			return deleteLeaf(node);
 		}
-		return deletingFromLeft(node.left);
+		//not a leaf or right replacement side, so must
+		return replaceWithLeft(node.left);
 	}
 
 	private E deleteLeaf(Node<E> node) {
@@ -181,7 +190,7 @@ public class AVLTree<E extends Comparable<E>> {
 		return null;
 	}
 
-	private E deletingFromLeft(Node<E> node) {
+	private E replaceWithLeft(Node<E> node) {
 		if (node.right == null) {
 			E replaceData = node.data;
 			node.parent.right = node.left;
@@ -191,10 +200,10 @@ public class AVLTree<E extends Comparable<E>> {
 			surveyParentPath(node.parent);
 			return replaceData;
 		}
-		return deletingFromLeft(node.right);
+		return replaceWithLeft(node.right);
 	}
 
-	private E deletingFromRight(Node<E> node) {
+	private E replaceWithRight(Node<E> node) {
 		if (node.left == null) {
 			E replaceData = node.data;
 			node.parent.left = node.right;
@@ -204,7 +213,7 @@ public class AVLTree<E extends Comparable<E>> {
 			surveyParentPath(node.parent);
 			return replaceData;
 		}
-		return deletingFromRight(node.left);
+		return replaceWithRight(node.left);
 	}
 
 	/*
@@ -432,22 +441,44 @@ public class AVLTree<E extends Comparable<E>> {
 	private String multDData(Node<E> node) {
 		String returned = "";
 		if(node.parent!=null) {
-			for(int i= 0; i<root.depth-node.parent.depth; i++) {
-				returned+="            ";
-			}
+			returned+=parentPathSpacesString(node);
 			if(node.parent.data.compareTo(node.data)==1) {
 				returned+="└───────────";
 			}
 			else {
 				returned+="┌───────────";
 			}
-			for(int i= 0; i<node.parent.depth-node.depth-1; i++) {
+			for(int i= 0; i<node.parent.depth-node.depth-2; i++) {
 				returned+="────────────";
 			}
 		}
 		return returned+node.data.toString()+"\n";
 	}
 
+	private String parentPathSpacesString(Node<E> node) {
+		ArrayList<String> parentPathSpaces = parentPathSpaces(node.parent,node.parent.data.compareTo(node.data)==1, new ArrayList<String>());
+		String returned = "";
+		for(int i=parentPathSpaces.size()-1; i>=0; i--) {
+			returned+=parentPathSpaces.get(i);
+		}
+		return returned;
+	}
+
+	//true is right, false is left
+	private ArrayList<String> parentPathSpaces(Node<E> node, boolean direction, ArrayList<String> stringArray) {
+		if(node.parent==null) {
+			return stringArray;
+		}
+		if(node.parent.data.compareTo(node.data)==-1 && direction || node.parent.data.compareTo(node.data)==1 && !direction) {
+			stringArray.add("|           ");
+			stringArray = parentPathSpaces(node.parent, !direction, stringArray);
+		}
+		else {
+			stringArray.add("            ");
+			stringArray = parentPathSpaces(node.parent, direction, stringArray);
+		}
+		return stringArray;
+	}
 
 	private void rotateLeft(Node<E> node) {
 		Node<E> rightLeft = node.right.left;
