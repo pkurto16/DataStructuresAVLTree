@@ -443,13 +443,13 @@ public class AVLTree<E extends Comparable<E>> {
 		if(node.parent!=null) {
 			returned+=parentPathSpacesString(node);
 			if(node.parent.data.compareTo(node.data)==1) {
-				returned+="└───────────";
+				returned+="╚═══════════";
 			}
 			else {
-				returned+="┌───────────";
+				returned+="╔═══════════";
 			}
 			for(int i= 0; i<node.parent.depth-node.depth-2; i++) {
-				returned+="────────────";
+				returned+="════════════";
 			}
 		}
 		return returned+node.data.toString()+"\n";
@@ -470,7 +470,7 @@ public class AVLTree<E extends Comparable<E>> {
 			return stringArray;
 		}
 		if(node.parent.data.compareTo(node.data)==-1 && direction || node.parent.data.compareTo(node.data)==1 && !direction) {
-			stringArray.add("|           ");
+			stringArray.add("║           ");
 			stringArray = parentPathSpaces(node.parent, !direction, stringArray);
 		}
 		else {

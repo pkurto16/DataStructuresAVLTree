@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 class AVLTest {
 	
-	final static int stressTestNum = 32;
+	final static int stressTestNum = 1000;
 	final static int multiplier = 5;
 	final static int smallTestNum = 20;
 	final static int smallTestDepth = 4;
