@@ -37,91 +37,103 @@ public class AVLTree<E extends Comparable<E>> {
 		root = null;
 		size = 0;
 	}
+
 	public boolean isEmpty() {
-		return root==null;
+		return root == null;
 	}
-	protected Node<E> getRoot(){
+
+	protected Node<E> getRoot() {
 		return root;
 	}
+
 	protected Node<E> getLeft() {
-		if(root==null) {
+		if (root == null) {
 			throw new IllegalArgumentException();
 		}
 		return root.left;
 	}
+
 	public E min() {
-		if(root==null) {
+		if (root == null) {
 			return null;
 		}
 		return minHelper(root);
 	}
+
 	private E minHelper(Node<E> node) {
-		if(node.left!=null) {
+		if (node.left != null) {
 			return minHelper(node.left);
 		}
 		return node.data;
 	}
 
 	public E max() {
-		if(root==null) {
+		if (root == null) {
 			return null;
 		}
 		return maxHelper(root);
 	}
+
 	private E maxHelper(Node<E> node) {
-		if(node.right!=null) {
+		if (node.right != null) {
 			return maxHelper(node.right);
 		}
 		return node.data;
 	}
+
 	protected Node<E> getRight() {
-		if(root==null) {
+		if (root == null) {
 			throw new IllegalArgumentException();
 		}
 		return root.right;
 	}
+
 	public int size() {
 		return size;
 	}
+
 	protected Node<E> getLeft(Node<E> node) {
-		if(node==null) {
+		if (node == null) {
 			throw new IllegalArgumentException();
 		}
 		return node.left;
 	}
 
 	protected Node<E> getRight(Node<E> node) {
-		if(node==null) {
+		if (node == null) {
 			throw new IllegalArgumentException();
 		}
 		return node.right;
 	}
 
 	public E getData() {
-		if(root==null) {
+		if (root == null) {
 			return null;
 		}
 		return root.data;
 	}
-	
+
 	protected E getData(Node<E> node) {
-		if(node==null) {
+		if (node == null) {
 			throw new IllegalArgumentException();
 		}
 		return node.data;
 	}
+
 	public int getDepth() {
-		if(root==null) {
+		if (root == null) {
 			return -1;
 		}
 		return root.depth;
 	}
-	protected Node<E> getParent(Node<E> node){
-		if(node==null) {
+
+	protected Node<E> getParent(Node<E> node) {
+		if (node == null) {
 			throw new IllegalArgumentException();
 		}
 		return node.parent;
 	}
+
 	protected int getDepth(Node<E> node) {
 		return node.depth;
 	}
@@ -135,16 +147,16 @@ public class AVLTree<E extends Comparable<E>> {
 	}
 
 	public boolean contains(E data) {
-		return searchFor(data, root)!=null;
+		return searchFor(data, root) != null;
 	}
 
 	public boolean delete(E data) {
-		Node<E> deletion = searchFor(data,root);
-		if(deletion!=null) {
+		Node<E> deletion = searchFor(data, root);
+		if (deletion != null) {
 			deletion.data = findReplacement(deletion);
 			size--;
-			if(deletion.data==null) {
-				deletion=null;
+			if (deletion.data == null) {
+				deletion = null;
 			}
 			return true;
 		}
@@ -152,7 +164,7 @@ public class AVLTree<E extends Comparable<E>> {
 	}
 
 	private Node<E> searchFor(E data, Node<E> node) {
-		if (node == null || node.data==null || data==null) {
+		if (node == null || node.data == null || data == null) {
 			return null;
 		}
 		if (data.compareTo(node.data) == 0) {
@@ -168,25 +180,25 @@ public class AVLTree<E extends Comparable<E>> {
 		if (getBalance(node) == 1) {
 			return replaceWithRight(node.right);
 		}
-		//if at a leaf, this will be true
-		if(node.left==null) {
-			if(node.parent==null) {
+		// if at a leaf, this will be true
+		if (node.left == null) {
+			if (node.parent == null) {
 				return null;
 			}
 			return deleteLeaf(node);
 		}
-		//not a leaf or right replacement side, so must
+		// not a leaf or right replacement side, so must
 		return replaceWithLeft(node.left);
 	}
 
 	private E deleteLeaf(Node<E> node) {
-		if(node.parent.left==node) {
-			node.parent.left=null;
+		if (node.parent.left == node) {
+			node.parent.left = null;
 		}
-		if(node.parent.right==node) {
-			node.parent.right=null;
+		if (node.parent.right == node) {
+			node.parent.right = null;
 		}
-		
+
 		return null;
 	}
 
@@ -194,7 +206,7 @@ public class AVLTree<E extends Comparable<E>> {
 		if (node.right == null) {
 			E replaceData = node.data;
 			node.parent.right = node.left;
-			if(node.left!=null) {
+			if (node.left != null) {
 				node.left.parent = node.parent;
 			}
 			surveyParentPath(node.parent);
@@ -207,7 +219,7 @@ public class AVLTree<E extends Comparable<E>> {
 		if (node.left == null) {
 			E replaceData = node.data;
 			node.parent.left = node.right;
-			if(node.right!=null) {
+			if (node.right != null) {
 				node.right.parent = node.parent;
 			}
 			surveyParentPath(node.parent);
@@ -222,16 +234,16 @@ public class AVLTree<E extends Comparable<E>> {
 	 * data<this.data default: data == this.data so just return
 	 */
 	public boolean put(E data) {
-		if(data==null) {
+		if (data == null) {
 			return false;
 		}
-		if(put(data, root)) {
+		if (put(data, root)) {
 			size++;
 			return true;
 		}
 		return false;
 	}
-	
+
 	private boolean put(E data, Node<E> node) {
 
 		switch (optionNumber(data, node)) {
@@ -280,13 +292,11 @@ public class AVLTree<E extends Comparable<E>> {
 		}
 	}
 
-	
-
 	private boolean startBlankTree(E data) {
 		if (debugMode) {
-			System.out.println("Insert Data to Instantialized Tree:[New Data:" + data.toString()+"]");
+			System.out.println("Insert Data to Instantialized Tree:[New Data:" + data.toString() + "]");
 		}
-		root=new Node<E>();
+		root = new Node<E>();
 		root.data = data;
 		surveyParentPath(root);
 		return true;
@@ -310,7 +320,8 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private boolean instantialSetLeft(E data, Node<E> node) {
 		if (debugMode) {
-			System.out.println("Left Instantial Set: [Current = " + node.data.toString() + ", New = " + data.toString() + "]");
+			System.out.println(
+					"Left Instantial Set: [Current = " + node.data.toString() + ", New = " + data.toString() + "]");
 		}
 		node.left = new Node<E>(null, null, node, data);
 		surveyParentPath(node.left);
@@ -319,7 +330,8 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private boolean instantialSetRight(E data, Node<E> node) {
 		if (debugMode) {
-			System.out.println("Right Instantial Set: [Current = " + node.data.toString() + ", New = " + data.toString() + "]");
+			System.out.println(
+					"Right Instantial Set: [Current = " + node.data.toString() + ", New = " + data.toString() + "]");
 		}
 		node.right = new Node<E>(null, null, node, data);
 		surveyParentPath(node.right);
@@ -416,7 +428,7 @@ public class AVLTree<E extends Comparable<E>> {
 		}
 		return s;
 	}
-	
+
 	public String multiD() {
 		if (root != null) {
 			return multiDHelper(root);
@@ -434,46 +446,43 @@ public class AVLTree<E extends Comparable<E>> {
 		returned += multiDHelper(node.left);
 		return returned;
 	}
-	
-	
-
 
 	private String multDData(Node<E> node) {
 		String returned = "";
-		if(node.parent!=null) {
-			returned+=parentPathSpacesString(node);
-			if(node.parent.data.compareTo(node.data)==1) {
-				returned+="╚═══════════";
+		if (node.parent != null) {
+			returned += parentPathSpacesString(node);
+			if (node.parent.data.compareTo(node.data) == 1) {
+				returned += "╚═══════════";
+			} else {
+				returned += "╔═══════════";
 			}
-			else {
-				returned+="╔═══════════";
-			}
-			for(int i= 0; i<node.parent.depth-node.depth-2; i++) {
-				returned+="════════════";
+			for (int i = 0; i < node.parent.depth - node.depth - 2; i++) {
+				returned += "════════════";
 			}
 		}
-		return returned+node.data.toString()+"\n";
+		return returned + node.data.toString() + "\n";
 	}
 
 	private String parentPathSpacesString(Node<E> node) {
-		ArrayList<String> parentPathSpaces = parentPathSpaces(node.parent,node.parent.data.compareTo(node.data)==1, new ArrayList<String>());
+		ArrayList<String> parentPathSpaces = parentPathSpaces(node.parent, node.parent.data.compareTo(node.data) == 1,
+				new ArrayList<String>());
 		String returned = "";
-		for(int i=parentPathSpaces.size()-1; i>=0; i--) {
-			returned+=parentPathSpaces.get(i);
+		for (int i = parentPathSpaces.size() - 1; i >= 0; i--) {
+			returned += parentPathSpaces.get(i);
 		}
 		return returned;
 	}
 
-	//true is right, false is left
+	// true is right, false is left
 	private ArrayList<String> parentPathSpaces(Node<E> node, boolean direction, ArrayList<String> stringArray) {
-		if(node.parent==null) {
+		if (node.parent == null) {
 			return stringArray;
 		}
-		if(node.parent.data.compareTo(node.data)==-1 && direction || node.parent.data.compareTo(node.data)==1 && !direction) {
+		if (node.parent.data.compareTo(node.data) == -1 && direction
+				|| node.parent.data.compareTo(node.data) == 1 && !direction) {
 			stringArray.add("║           ");
 			stringArray = parentPathSpaces(node.parent, !direction, stringArray);
-		}
-		else {
+		} else {
 			stringArray.add("            ");
 			stringArray = parentPathSpaces(node.parent, direction, stringArray);
 		}
@@ -484,15 +493,8 @@ public class AVLTree<E extends Comparable<E>> {
 		Node<E> rightLeft = node.right.left;
 		node.right.left = node;
 		aboveLeftRotate(node);
-
-		node.right.parent = node.parent;
-		node.parent = node.right;
-		node.right = rightLeft;
-		if (node.right != null) {
-			node.right.parent = node;
-		}
-		node.depth = chooseDepth(correctDepth(node.left) + 1, correctDepth(node.right) + 1);
-		node.parent.depth = chooseDepth(node.depth + 1, correctDepth(node.parent.right) + 1);
+		setNewRightPointers(node, rightLeft);
+		fixDepthsLR(node);
 		if (debugMode) {
 			System.out.print(" (Rotated Left)");
 		}
@@ -510,19 +512,27 @@ public class AVLTree<E extends Comparable<E>> {
 		}
 	}
 
+	private void setNewRightPointers(Node<E> node, Node<E> rightLeft) {
+		node.right.parent = node.parent;
+		node.parent = node.right;
+		node.right = rightLeft;
+
+		if (node.right != null) {
+			node.right.parent = node;
+		}
+	}
+
+	private void fixDepthsLR(Node<E> node) {
+		node.depth = chooseDepth(correctDepth(node.left) + 1, correctDepth(node.right) + 1);
+		node.parent.depth = chooseDepth(node.depth + 1, correctDepth(node.parent.right) + 1);
+	}
+
 	private void rotateRight(Node<E> node) {
 		Node<E> leftRight = node.left.right;
 		node.left.right = node;
 		aboveRightRotate(node);
-
-		node.left.parent = node.parent;
-		node.parent = node.left;
-		node.left = leftRight;
-		if (node.left != null) {
-			node.left.parent = node;
-		}
-		node.depth = chooseDepth(correctDepth(node.left) + 1, correctDepth(node.right) + 1);
-		node.parent.depth = chooseDepth(node.depth + 1, correctDepth(node.parent.left) + 1);
+		setNewLeftPointers(node, leftRight);
+		fixDepthsRR(node);
 
 		if (debugMode) {
 			System.out.print(" (Rotated Right)");
@@ -539,6 +549,20 @@ public class AVLTree<E extends Comparable<E>> {
 				node.parent.left = node.left;
 			}
 		}
+	}
+
+	private void setNewLeftPointers(Node<E> node, Node<E> leftRight) {
+		node.left.parent = node.parent;
+		node.parent = node.left;
+		node.left = leftRight;
+		if (node.left != null) {
+			node.left.parent = node;
+		}
+	}
+
+	private void fixDepthsRR(Node<E> node) {
+		node.depth = chooseDepth(correctDepth(node.left) + 1, correctDepth(node.right) + 1);
+		node.parent.depth = chooseDepth(node.depth + 1, correctDepth(node.parent.left) + 1);
 	}
 
 	private void checkBalance(Node<E> node) {
@@ -578,7 +602,8 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private void parentPathHelper(int proposedDepth, Node<E> node) {
 		if (debugMode) {
-			System.out.print("(b = " + getBalance(node) + ", d = " + proposedDepth + ", v = " + node.data.toString() + ")");
+			System.out.print(
+					"(b = " + getBalance(node) + ", d = " + proposedDepth + ", v = " + node.data.toString() + ")");
 		}
 		checkDepth(proposedDepth, node);
 		checkBalance(node);
