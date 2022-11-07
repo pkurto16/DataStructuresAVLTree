@@ -1,11 +1,11 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
+//
 
 class AVLTest {
 	
-	final static int stressTestNum = 1000;
+	final static int stressTestNum = 100006;
 	final static int multiplier = 5;
 	final static int smallTestNum = 20;
 	final static int smallTestDepth = 4;
@@ -245,6 +245,7 @@ class AVLTest {
 	@Test
 	void deleteAllLeaves() {
 		AVLTree<Integer> testTree = new AVLTree<Integer>();
+		testTree.setDebugMode(true);
 		testTree.put(20);
 		testTree.put(10);
 		testTree.put(30);
@@ -254,20 +255,29 @@ class AVLTest {
 		testTree.put(35);
 		
 		assertEquals("20 10 5 15 30 25 35", testTree.preOrder());
+		System.out.println(testTree.multiD());
 		testTree.delete(5);
+		System.out.println(testTree.multiD());
 		assertEquals("20 10 15 30 25 35", testTree.preOrder());
 		testTree.delete(15);
+		System.out.println(testTree.multiD());
 		assertEquals("20 10 30 25 35", testTree.preOrder());
 		testTree.delete(25);
+		System.out.println(testTree.multiD());
 		assertEquals("20 10 30 35", testTree.preOrder());
 		testTree.delete(35);
+		System.out.println(testTree.multiD());
 		assertEquals("20 10 30", testTree.preOrder());
 		testTree.delete(10);
+		System.out.println(testTree.multiD());
 		assertEquals("20 30", testTree.preOrder());
 		testTree.delete(30);
+		System.out.println(testTree.multiD());
 		assertEquals("20", testTree.preOrder());
 		testTree.delete(20);
+		System.out.println(testTree.multiD());
 		assertEquals("", testTree.preOrder());
+		testTree.setDebugMode(false);
 	}
 	
 	@Test
@@ -632,11 +642,9 @@ class AVLTest {
 			for(int j = 0; j<(int)(Math.random()*multiplier); j++){
 				testTree.put((int) (Math.random() * stressTestNum*multiplier));
 			}
-			//testTree.delete((int) (Math.random() * stressTestNum*multiplier));
+			testTree.delete((int) (Math.random() * stressTestNum*multiplier));
 		}
-		System.out.println("Int Stress Test");
-		System.out.println(testTree.multiD());
-		System.out.println("\n\n\n\n");
+		//System.out.println(testTree.multiD());
 		rigorousCheck(testTree.getRoot(), testTree);
 	}
 	
@@ -650,11 +658,8 @@ class AVLTest {
 			}
 			//since these are floats its likely that only a few deletes will happen here,
 			//over the full test, so the Integer stress test is better for stress testing deletes
-			//testTree.delete((float)Math.random() * smallTestNum*multiplier);
+			testTree.delete((float)Math.random() * smallTestNum*multiplier);
 		}
-		System.out.println("Float Stress Test");
-		System.out.println(testTree.multiD());
-		System.out.println("\n\n\n\n");
 		rigorousCheck(testTree.getRoot(), testTree);
 	}
 	
@@ -718,8 +723,9 @@ class AVLTest {
 		assertEquals("11 6 3 1 0 2 5 4 8 7 10 9 16 14 13 15 18 17 19", testTree.preOrder());
 		
 		//mini stress test delete the rest randomly until all elements are gone
-		while(testTree.size()>0) {
+		while(testTree.size()>1) {
 			testTree.delete((int)(Math.random()*20-1));
+			System.out.println(testTree.multiD());
 			rigorousCheck(testTree.getRoot(), testTree);
 		}
 	}

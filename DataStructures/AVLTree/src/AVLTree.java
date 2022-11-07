@@ -193,39 +193,60 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private E deleteLeaf(Node<E> node) {
 		if (node.parent.left == node) {
+			node.parent.depth = chooseDepth(0, correctDepth(node.parent.right)+1);
+			System.out.println("Chose Depth From: "+0+" to: "+correctDepth(node.parent.right)+"+1");
 			node.parent.left = null;
-		}
-		if (node.parent.right == node) {
+		} else {
+			node.parent.depth = chooseDepth(0, correctDepth(node.parent.left)+1);
+			System.out.println("Chose Depth From: 0"+" to: "+correctDepth(node.parent.left)+"+1");
 			node.parent.right = null;
 		}
 
+		surveyParentPath(node.parent);
 		return null;
 	}
 
 	private E replaceWithLeft(Node<E> node) {
 		if (node.right == null) {
 			E replaceData = node.data;
-			node.parent.right = node.left;
-			if (node.left != null) {
-				node.left.parent = node.parent;
-			}
+			replaceOnLeft(node);
 			surveyParentPath(node.parent);
 			return replaceData;
 		}
 		return replaceWithLeft(node.right);
 	}
 
+	private void replaceOnLeft(Node<E> node) {
+		if (node.parent.left == node) {
+			node.parent.left = node.left;
+		} else {
+			node.parent.right = node.left;
+		}
+		if (node.left != null) {
+			node.left.parent = node.parent;
+		}
+	}
+
 	private E replaceWithRight(Node<E> node) {
 		if (node.left == null) {
 			E replaceData = node.data;
-			node.parent.left = node.right;
-			if (node.right != null) {
-				node.right.parent = node.parent;
-			}
+			replaceOnRight(node);
+
 			surveyParentPath(node.parent);
 			return replaceData;
 		}
 		return replaceWithRight(node.left);
+	}
+
+	private void replaceOnRight(Node<E> node) {
+		if (node.parent.right == node) {
+			node.parent.right = node.left;
+		} else {
+			node.parent.left = node.right;
+		}
+		if (node.right != null) {
+			node.right.parent = node.parent;
+		}
 	}
 
 	/*
@@ -246,50 +267,34 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private boolean put(E data, Node<E> node) {
 
-		switch (optionNumber(data, node)) {
-		case 0:
-			startBlankTree(data);
+		if (node == null)
+			return startBlankTree(data);
+		if (checkRightPut(data, node))
 			return true;
-		case 1:
-			return putRightSide(data, node);
-		case 2:
-			return putLeftSide(data, node);
-		case 3:
-			instantialSetRight(data, node);
+		if (checkLeftPut(data, node))
 			return true;
-		case 4:
-			instantialSetLeft(data, node);
-			return true;
-		default:
-			return false;
-		}
+
+		return false;
 	}
 
-	private int optionNumber(E data, Node<E> node) {
-		for (int o = 0; o < 5; o++) {
-			if (optionCondition(data, o, node)) {
-				return o;
+	private boolean checkRightPut(E data, Node<E> node) {
+		if (data.compareTo(node.data) == 1) {
+			if (node.right != null) {
+				return putRightSide(data, node);
 			}
+			return instantialSetRight(data, node);
 		}
-		return -1;
+		return false;
 	}
 
-	private boolean optionCondition(E data, int o, Node<E> node) {
-
-		switch (o) {
-		case 0:
-			return node == null;
-		case 1:
-			return (node.right != null) && (data.compareTo(node.data) > 0);
-		case 2:
-			return (node.left != null) && (data.compareTo(node.data) < 0);
-		case 3:
-			return (data.compareTo(node.data) > 0);
-		case 4:
-			return (data.compareTo(node.data) < 0);
-		default:
-			return true;
+	private boolean checkLeftPut(E data, Node<E> node) {
+		if (data.compareTo(node.data) == -1) {
+			if (node.left != null) {
+				return putLeftSide(data, node);
+			}
+			return instantialSetLeft(data, node);
 		}
+		return false;
 	}
 
 	private boolean startBlankTree(E data) {
@@ -430,7 +435,7 @@ public class AVLTree<E extends Comparable<E>> {
 	}
 
 	public String multiD() {
-		if (root != null) {
+		if (root != null && root.data != null) {
 			return multiDHelper(root);
 		}
 		return "";
@@ -584,7 +589,7 @@ public class AVLTree<E extends Comparable<E>> {
 	}
 
 	private int correctDepth(Node<E> node) {
-		if (node != null) {
+		if (node != null && node.data != null) {
 			return node.depth;
 		}
 		return -1;
@@ -592,11 +597,11 @@ public class AVLTree<E extends Comparable<E>> {
 
 	private void surveyParentPath(Node<E> node) {
 		if (debugMode) {
-			System.out.print("\nParent Path:[");
+			System.out.print("│\n└─>Parent Path:[");
 		}
 		parentPathHelper(0, node);
 		if (debugMode) {
-			System.out.println("]");
+			System.out.print("]\n\n");
 		}
 	}
 
